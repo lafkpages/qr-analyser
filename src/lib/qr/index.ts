@@ -18,6 +18,14 @@ export enum CellType {
 	Data
 }
 
+export const cellTypeLabels = [
+	'position pattern',
+	'alignment pattern',
+	'timing pattern',
+	'format info',
+	'data'
+];
+
 export function getCellType(qrSize: number, row: number, col: number) {
 	if (
 		/* Top left */ (row < 8 && col < 8) ||
