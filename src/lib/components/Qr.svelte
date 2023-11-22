@@ -5,7 +5,8 @@
 
 	import { CellType, cellTypeLabels, getCellType } from '$lib/qr';
 
-	import QrOverlay from '$components/QrOverlay.svelte';
+	import DataTable from './DataTable.svelte';
+	import QrOverlay from '$components/DataTableOverlay.svelte';
 
 	export let qr: Qr;
 
@@ -22,7 +23,8 @@
 </script>
 
 <div class="qr" style:--cell-size="{cellSize}px" bind:this={qrElm}>
-	<table
+	<DataTable
+		lines={qr.lines}
 		on:pointermove={(e) => {
 			hoveredCellX = Math.floor(e.offsetX / cellSize);
 			hoveredCellY = Math.floor(e.offsetY / cellSize);
@@ -37,16 +39,6 @@
 			hoveredCellY = null;
 		}}
 	>
-		<tbody>
-			{#each qr as line, lineIndex (lineIndex)}
-				<tr>
-					{#each line as cell, cellIndex (cellIndex)}
-						<td class="cell" class:on={cell == '1'} />
-					{/each}
-				</tr>
-			{/each}
-		</tbody>
-
 		<!-- Hovered cell -->
 		{#if hoveredCellX != null && hoveredCellY != null}
 			<QrOverlay
@@ -74,7 +66,7 @@
 		<QrOverlay x={6} y={8} width={1} height={qr.size - 16} color="yellow" />
 		<QrOverlay x={8} y={6} width={qr.size - 16} height={1} color="yellow" />
 		<QrOverlay x={8} y={qr.size - 8} width={1} height={1} color="yellow" />
-	</table>
+	</DataTable>
 
 	<div class="info">
 		<h3>QR info</h3>
@@ -106,33 +98,10 @@
 
 <style lang="scss">
 	div.qr {
-		$cellSize: 8px;
-
 		display: flex;
 		gap: 12px;
 
-		table {
-			border-spacing: 0px;
-			position: relative;
-
-			tbody {
-				pointer-events: none;
-
-				tr {
-					height: $cellSize;
-
-					td.cell {
-						width: $cellSize;
-						height: $cellSize;
-						aspect-ratio: 1;
-
-						&.on {
-							background-color: black;
-						}
-					}
-				}
-			}
-
+		:global(.data-table) {
 			:global(.hovered-cell) {
 				opacity: 0.8;
 				outline: 2px solid magenta;
