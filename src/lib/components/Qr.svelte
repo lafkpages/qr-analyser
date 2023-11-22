@@ -3,6 +3,8 @@
 
 	import { onMount } from 'svelte';
 
+	import { cellTypeLabels, getCellType } from '$lib/qr';
+
 	import QrOverlay from '$components/QrOverlay.svelte';
 
 	export let qr: Qr;
@@ -11,6 +13,9 @@
 
 	let cellSize = 0;
 
+	let hoveredCellX: number | null = null;
+	let hoveredCellY: number | null = null;
+
 	onMount(() => {
 		cellSize = qrElm.getElementsByTagName('td')[0].clientHeight;
 	});
@@ -18,11 +23,23 @@
 
 <div class="qr" style:--cell-size="{cellSize}px" bind:this={qrElm}>
 	<table>
-		<tbody>
+		<tbody
+			on:pointerleave={() => {
+				hoveredCellX = null;
+				hoveredCellY = null;
+			}}
+		>
 			{#each qr as line, lineIndex}
 				<tr>
-					{#each line as cell}
-						<td class="cell" class:on={cell == '1'} />
+					{#each line as cell, cellIndex}
+						<td
+							class="cell"
+							class:on={cell == '1'}
+							on:pointerover={() => {
+								hoveredCellX = cellIndex;
+								hoveredCellY = lineIndex;
+							}}
+						/>
 					{/each}
 				</tr>
 			{/each}
@@ -33,9 +50,15 @@
 	</table>
 
 	<div class="info">
+		<h3>QR info</h3>
 		<span>Size: {qr.size}</span>
 		<span>Version: {qr.version}</span>
 		<span>Mask: {qr.maskStr} ({qr.mask})</span>
+
+		{#if hoveredCellX != null && hoveredCellY != null}
+			<h3>Cell info</h3>
+			<span>Cell type: {cellTypeLabels[getCellType(qr.size, hoveredCellY, hoveredCellX)]}</span>
+		{/if}
 	</div>
 </div>
 
