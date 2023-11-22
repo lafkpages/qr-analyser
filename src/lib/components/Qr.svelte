@@ -47,6 +47,11 @@
 
 		<QrOverlay x={2} y={8} width={3} height={1} />
 		<QrOverlay x={qr.size - 2} y={qr.size - 2} width={2} height={2} />
+
+		<!-- Position patterns -->
+		<QrOverlay x={0} y={0} width={8} height={8} color="green" />
+		<QrOverlay x={qr.size - 8} y={0} width={8} height={8} color="green" />
+		<QrOverlay x={0} y={qr.size - 8} width={8} height={8} color="green" />
 	</table>
 
 	<div class="info">
