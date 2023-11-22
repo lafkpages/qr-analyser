@@ -10,6 +10,41 @@ export function parseQr(qr: string | Qr) {
 	return qr;
 }
 
+export enum CellType {
+	PositionPattern,
+	AlignmentPattern,
+	TimingPattern,
+	FormatInfo,
+	Data
+}
+
+export function getCellType(qrSize: number, row: number, col: number) {
+	if (
+		/* Top left */ (row < 8 && col < 8) ||
+		/* Top right */ (row < 8 && col > qrSize - 8) ||
+		/* Bottom left */ (row > qrSize - 8 && col < 8)
+	) {
+		return CellType.PositionPattern;
+	}
+
+	if ((row == 6 && col >= 8 && col <= qrSize - 8) || (row >= 8 && row <= qrSize - 8 && col == 6)) {
+		return CellType.TimingPattern;
+	}
+
+	// TODO: Alignment patterns
+
+	if (
+		(row == 8 && col <= 8) ||
+		(row <= 8 && col == 8) ||
+		(row == 8 && col >= qrSize - 8) ||
+		(row >= qrSize - 8 && col == 8)
+	) {
+		return CellType.FormatInfo;
+	}
+
+	return CellType.Data;
+}
+
 export class Qr {
 	lines: string[];
 
