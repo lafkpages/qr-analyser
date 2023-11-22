@@ -11,8 +11,6 @@
 			.map((_, x) => (masks[mask](x, y) ? '1' : '0'))
 			.join('')
 	);
-
-	$: console.log(lines);
 </script>
 
 <DataTable {lines} />
