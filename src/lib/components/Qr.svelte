@@ -31,6 +31,7 @@
 		</tbody>
 
 		<QrOverlay x={2} y={8} width={3} height={1} />
+		<QrOverlay x={qr.size - 2} y={qr.size - 2} width={2} height={2} />
 	</table>
 
 	<div class="info">
