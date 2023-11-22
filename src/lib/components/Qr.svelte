@@ -73,6 +73,7 @@
 		<!-- Timing patterns -->
 		<QrOverlay x={6} y={8} width={1} height={qr.size - 16} color="yellow" />
 		<QrOverlay x={8} y={6} width={qr.size - 16} height={1} color="yellow" />
+		<QrOverlay x={8} y={qr.size - 8} width={1} height={1} color="yellow" />
 	</table>
 
 	<div class="info">

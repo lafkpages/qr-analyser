@@ -29,13 +29,17 @@ export const cellTypeLabels = [
 export function getCellType(qrSize: number, row: number, col: number) {
 	if (
 		/* Top left */ (row < 8 && col < 8) ||
-		/* Top right */ (row < 8 && col > qrSize - 8) ||
-		/* Bottom left */ (row > qrSize - 8 && col < 8)
+		/* Top right */ (row < 8 && col >= qrSize - 8) ||
+		/* Bottom left */ (row >= qrSize - 8 && col < 8)
 	) {
 		return CellType.PositionPattern;
 	}
 
-	if ((row == 6 && col >= 8 && col <= qrSize - 8) || (row >= 8 && row <= qrSize - 8 && col == 6)) {
+	if (
+		(row == 6 && col >= 8 && col <= qrSize - 9) ||
+		(row >= 8 && row <= qrSize - 8 && col == 6) ||
+		(row == qrSize - 8 && col == 8)
+	) {
 		return CellType.TimingPattern;
 	}
 
