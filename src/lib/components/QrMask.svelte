@@ -5,8 +5,11 @@
 
 	export let mask: number;
 
-	$: lines = new Array(6).fill(0).map((_, y) =>
-		new Array(6)
+	export let width = 6;
+	export let height = 6;
+
+	$: lines = new Array(height).fill(0).map((_, y) =>
+		new Array(width)
 			.fill(0)
 			.map((_, x) => (masks[mask](x, y) ? '1' : '0'))
 			.join('')
