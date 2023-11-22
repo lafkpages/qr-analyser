@@ -1,1 +1,1 @@
-# QR reader animation
+# Interactive QR reader
