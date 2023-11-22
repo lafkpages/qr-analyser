@@ -1,12 +1,15 @@
 <script lang="ts">
 	import QrMask from './QrMask.svelte';
+
+	export let width: number | undefined = undefined;
+	export let height: number | undefined = undefined;
 </script>
 
 <div class="masks">
 	{#each { length: 8 } as _, mask}
 		<div class="mask">
 			<h4>Mask {mask.toString(2).padStart(3, '0')}</h4>
-			<QrMask {mask} />
+			<QrMask {mask} {width} {height} />
 		</div>
 	{/each}
 </div>
