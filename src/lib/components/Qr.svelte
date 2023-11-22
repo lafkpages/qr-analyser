@@ -2,6 +2,8 @@
 	import { parseQr, type Qr } from '$lib/qr';
 	import { onMount } from 'svelte';
 
+	import QrOverlay from '$components/QrOverlay.svelte';
+
 	let rawQr: string | Qr;
 	export { rawQr as qr };
 
@@ -28,7 +30,7 @@
 			{/each}
 		</tbody>
 
-		<div class="overlay mask" />
+		<QrOverlay x={2} y={8} width={3} height={1} />
 	</table>
 
 	<div class="info">
@@ -60,22 +62,6 @@
 					&.on {
 						background-color: black;
 					}
-				}
-			}
-
-			div.overlay {
-				position: absolute;
-				background-color: #ff0000aa;
-
-				&:hover {
-					transform: scale(1.2);
-				}
-
-				&.mask {
-					top: calc(8 * var(--cell-size));
-					left: calc(2 * var(--cell-size));
-					width: calc(3 * var(--cell-size));
-					height: calc(var(--cell-size));
 				}
 			}
 		}
