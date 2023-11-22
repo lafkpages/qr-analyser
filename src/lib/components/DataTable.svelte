@@ -40,6 +40,7 @@
 	table {
 		border-spacing: 0px;
 		position: relative;
+		aspect-ratio: 1;
 
 		tbody {
 			pointer-events: none;
