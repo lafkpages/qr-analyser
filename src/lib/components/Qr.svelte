@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { parseQr, type Qr } from '$lib/qr';
+	import type { Qr } from '$lib/qr';
+
 	import { onMount } from 'svelte';
 
 	import QrOverlay from '$components/QrOverlay.svelte';
 
-	let rawQr: string | Qr;
-	export { rawQr as qr };
-
-	$: qr = parseQr(rawQr);
+	export let qr: Qr;
 
 	let qrElm: HTMLDivElement;
 

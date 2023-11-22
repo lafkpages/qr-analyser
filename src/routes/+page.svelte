@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { qrs } from '$lib/qr';
+	import { qrs, parseQr } from '$lib/qr';
 
 	import Qr from '$components/Qr.svelte';
+
+	let qr = parseQr(qrs.wikipedia);
 </script>
 
-<Qr qr={qrs.wikipedia} />
+<Qr {qr} />
