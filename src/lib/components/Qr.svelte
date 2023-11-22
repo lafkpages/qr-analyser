@@ -3,7 +3,7 @@
 
 	import { onMount } from 'svelte';
 
-	import { cellTypeLabels, getCellType } from '$lib/qr';
+	import { CellType, cellTypeLabels, getCellType } from '$lib/qr';
 
 	import QrOverlay from '$components/QrOverlay.svelte';
 
@@ -22,36 +22,57 @@
 </script>
 
 <div class="qr" style:--cell-size="{cellSize}px" bind:this={qrElm}>
-	<table>
-		<tbody
-			on:pointerleave={() => {
+	<table
+		on:pointermove={(e) => {
+			hoveredCellX = Math.floor(e.offsetX / cellSize);
+			hoveredCellY = Math.floor(e.offsetY / cellSize);
+
+			if (hoveredCellX >= qr.size || hoveredCellY >= qr.size) {
 				hoveredCellX = null;
 				hoveredCellY = null;
-			}}
-		>
-			{#each qr as line, lineIndex}
+			}
+		}}
+		on:pointerleave={() => {
+			hoveredCellX = null;
+			hoveredCellY = null;
+		}}
+	>
+		<tbody>
+			{#each qr as line, lineIndex (lineIndex)}
 				<tr>
-					{#each line as cell, cellIndex}
-						<td
-							class="cell"
-							class:on={cell == '1'}
-							on:pointerover={() => {
-								hoveredCellX = cellIndex;
-								hoveredCellY = lineIndex;
-							}}
-						/>
+					{#each line as cell, cellIndex (cellIndex)}
+						<td class="cell" class:on={cell == '1'} />
 					{/each}
 				</tr>
 			{/each}
 		</tbody>
 
-		<QrOverlay x={2} y={8} width={3} height={1} />
-		<QrOverlay x={qr.size - 2} y={qr.size - 2} width={2} height={2} />
+		<!-- Hovered cell -->
+		{#if hoveredCellX != null && hoveredCellY != null}
+			<QrOverlay
+				x={hoveredCellX}
+				y={hoveredCellY}
+				width={1}
+				height={1}
+				color="magenta"
+				class="hovered-cell"
+			/>
+		{/if}
+
+		<!-- Mask data -->
+		<QrOverlay x={2} y={8} width={3} height={1} color="cyan" />
+
+		<!-- Encoding -->
+		<QrOverlay x={qr.size - 2} y={qr.size - 2} width={2} height={2} color="orange" />
 
 		<!-- Position patterns -->
 		<QrOverlay x={0} y={0} width={8} height={8} color="green" />
 		<QrOverlay x={qr.size - 8} y={0} width={8} height={8} color="green" />
 		<QrOverlay x={0} y={qr.size - 8} width={8} height={8} color="green" />
+
+		<!-- Timing patterns -->
+		<QrOverlay x={6} y={8} width={1} height={qr.size - 16} color="yellow" />
+		<QrOverlay x={8} y={6} width={qr.size - 16} height={1} color="yellow" />
 	</table>
 
 	<div class="info">
@@ -62,8 +83,23 @@
 
 		{#if hoveredCellX != null && hoveredCellY != null}
 			<h3>Cell info</h3>
+			<span>X: {hoveredCellX}</span>
+			<span>Y: {hoveredCellY}</span>
 			<span>Cell type: {cellTypeLabels[getCellType(qr.size, hoveredCellY, hoveredCellX)]}</span>
 		{/if}
+	</div>
+
+	<div class="key">
+		<h3>Color key</h3>
+
+		<ul>
+			{#each [['green', cellTypeLabels[CellType.PositionPattern]], ['yellow', cellTypeLabels[CellType.TimingPattern]], ['cyan', 'mask data'], ['orange', 'data encoding'], ['magenta', 'hovered cell']] as [color, label]}
+				<li>
+					<div style:--color={color} />
+					{label}
+				</li>
+			{/each}
+		</ul>
 	</div>
 </div>
 
@@ -78,24 +114,61 @@
 			border-spacing: 0px;
 			position: relative;
 
-			tr {
-				height: $cellSize;
+			tbody {
+				pointer-events: none;
 
-				td.cell {
-					width: $cellSize;
+				tr {
 					height: $cellSize;
-					aspect-ratio: 1;
 
-					&.on {
-						background-color: black;
+					td.cell {
+						width: $cellSize;
+						height: $cellSize;
+						aspect-ratio: 1;
+
+						&.on {
+							background-color: black;
+						}
 					}
 				}
+			}
+
+			:global(.hovered-cell) {
+				opacity: 0.8;
+				outline: 2px solid magenta;
 			}
 		}
 
 		div.info {
 			display: flex;
 			flex-direction: column;
+
+			h3:first-of-type {
+				margin-block-start: 0px;
+			}
+		}
+
+		div.key {
+			h3:first-of-type {
+				margin-block-start: 0px;
+			}
+
+			ul {
+				padding: 0px;
+
+				li {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+
+					div {
+						width: var(--cell-size);
+						height: var(--cell-size);
+						aspect-ratio: 1;
+
+						background-color: var(--color);
+					}
+				}
+			}
 		}
 	}
 </style>

@@ -5,10 +5,13 @@
 	export let height: number;
 
 	export let color = 'red';
+
+	let class_ = '';
+	export { class_ as class };
 </script>
 
 <div
-	class="overlay"
+	class="overlay {class_}"
 	style:--x={x}
 	style:--y={y}
 	style:--width={width}
@@ -24,6 +27,7 @@
 		width: calc(var(--width) * var(--cell-size));
 		height: calc(var(--height) * var(--cell-size));
 		z-index: 2;
+		pointer-events: none;
 
 		background-color: var(--color);
 		opacity: 0.5;
