@@ -23,12 +23,19 @@
 		left: calc(var(--x) * var(--cell-size));
 		width: calc(var(--width) * var(--cell-size));
 		height: calc(var(--height) * var(--cell-size));
+		z-index: 2;
 
 		background-color: var(--color);
 		opacity: 0.5;
 
 		&:hover {
-			transform: scale(1.2);
+			$hoverSize: 2px;
+
+			padding: $hoverSize;
+			margin-top: calc(-1 * $hoverSize);
+			margin-left: calc(-1 * $hoverSize);
+
+			z-index: 3;
 		}
 	}
 </style>
