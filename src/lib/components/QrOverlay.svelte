@@ -28,7 +28,6 @@
 		opacity: 0.5;
 
 		&:hover {
-			opacity: 1;
 			transform: scale(1.2);
 		}
 	}
