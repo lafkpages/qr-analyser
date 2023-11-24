@@ -23,12 +23,16 @@
 		<span>Mask: {qr.maskStr} ({qr.mask})</span>
 
 		<QrMask mask={qr.mask} />
+	</div>
 
+	<div class="info cell-info">
+		<h3>Cell info</h3>
 		{#if hoveredCellX != null && hoveredCellY != null}
-			<h3>Cell info</h3>
 			<span>X: {hoveredCellX}</span>
 			<span>Y: {hoveredCellY}</span>
 			<span>Cell type: {cellTypeLabels[getCellType(qr.size, hoveredCellY, hoveredCellX)]}</span>
+		{:else}
+			<p>Hover over a cell to see its info.</p>
 		{/if}
 	</div>
 
@@ -72,6 +76,8 @@
 		}
 
 		div.key {
+			margin-left: auto;
+
 			h3:first-of-type {
 				margin-block-start: 0px;
 			}
