@@ -36,14 +36,7 @@
 	>
 		<!-- Hovered cell -->
 		{#if hoveredCellX != null && hoveredCellY != null}
-			<DataTableOverlay
-				x={hoveredCellX}
-				y={hoveredCellY}
-				width={1}
-				height={1}
-				color="magenta"
-				class="hovered-cell"
-			/>
+			<DataTableOverlay x={hoveredCellX} y={hoveredCellY} color="magenta" class="hovered-cell" />
 		{/if}
 
 		<QrOverlays {qr} />
@@ -86,7 +79,7 @@
 		{#each { length: qr.size } as _, y}
 			{#each { length: qr.size } as _, x}
 				{#if getCellType(qr.size, y, x) == CellType.Data && masks[qr.mask](x, y)}
-					<DataTableOverlay {x} {y} width={1} height={1} color="teal" />
+					<DataTableOverlay {x} {y} color="teal" />
 				{/if}
 			{/each}
 		{/each}
