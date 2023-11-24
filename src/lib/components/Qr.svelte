@@ -11,8 +11,6 @@
 
 	export let qr: Qr;
 
-	let cellSize = 0;
-
 	let hoveredCellX: number | null = null;
 	let hoveredCellY: number | null = null;
 </script>
@@ -21,8 +19,8 @@
 	<DataTable
 		lines={qr.lines}
 		on:pointermove={(e) => {
-			hoveredCellX = Math.floor(e.offsetX / cellSize);
-			hoveredCellY = Math.floor(e.offsetY / cellSize);
+			hoveredCellX = Math.floor(e.offsetX / 8); // 8 = cell size
+			hoveredCellY = Math.floor(e.offsetY / 8); // TODO: use $cellSize from SCSS
 
 			if (hoveredCellX >= qr.size || hoveredCellY >= qr.size) {
 				hoveredCellX = null;
