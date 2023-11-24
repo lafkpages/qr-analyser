@@ -19,14 +19,19 @@
 
 	<div class="middle">
 		<div class="info">
-			<h3>QR info</h3>
+			<h3>QR metadata</h3>
 			<p>
 				<span>Size: {qr.size}</span>
 				<br />
 				<span>Version: {qr.version}</span>
 				<br />
 				<span>Raw mask: {qr.rawMaskStr} ({qr.rawMask})</span>
-				<br />
+			</p>
+		</div>
+
+		<div class="info">
+			<h3>QR mask</h3>
+			<p>
 				<span>Mask: {qr.maskStr} ({qr.mask})</span>
 			</p>
 
