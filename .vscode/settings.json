@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"*.qr": "qr"
+	},
+	"[qr]": {
+		"editor.indentSize": 2
+	}
+}
