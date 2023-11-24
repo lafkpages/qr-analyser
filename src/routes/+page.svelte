@@ -4,8 +4,15 @@
 	import Qr from '$components/Qr.svelte';
 	import QrMasks from '$components/QrMasks.svelte';
 
-	let qr = parseQr(qrs.wikipedia);
+	let qrId: keyof typeof qrs = 'wikipedia';
+	$: qr = parseQr(qrs[qrId]);
 </script>
+
+QR code: <select bind:value={qrId}>
+	<option value="wikipedia">Wikipedia</option>
+</select>
+
+<hr />
 
 <Qr {qr} />
 
