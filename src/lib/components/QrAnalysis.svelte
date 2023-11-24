@@ -47,6 +47,14 @@
 					<span>Y: {hoveredCellY}</span>
 					<br />
 					<span>Cell type: {cellTypeLabels[getCellType(qr.size, hoveredCellY, hoveredCellX)]}</span>
+					<br />
+					<span>Raw value: {qr.lines[hoveredCellY][hoveredCellX]}</span>
+					<br />
+					<span>Unmasked value: {qr.unmaskedLines[hoveredCellY][hoveredCellX]}</span>
+					<!-- TODO: optimise ^^
+						Using unmaskedLines is slow because it has to calculate
+						all lines even though we only need one cell.
+					-->
 				{:else}
 					Hover over a cell to see its info.
 				{/if}
