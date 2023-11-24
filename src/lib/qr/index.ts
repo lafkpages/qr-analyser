@@ -164,7 +164,7 @@ export class Qr {
 
 				// Only unmask data cells
 				if (cellType == CellType.Data) {
-					unmaskedLine += masks[this.mask](x, y) ? '1' : '0';
+					unmaskedLine += masks[this.mask](x, y) ? (line[x] == '1' ? '0' : '1') : line[x];
 				} else {
 					unmaskedLine += line[x];
 				}
