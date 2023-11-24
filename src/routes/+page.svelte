@@ -10,6 +10,7 @@
 
 QR code: <select bind:value={qrId}>
 	<option value="wikipedia">Wikipedia</option>
+	<option value="wifi">WiFi</option>
 </select>
 
 <hr />
