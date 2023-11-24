@@ -5,6 +5,7 @@
 	export let height = 1;
 
 	export let color = 'red';
+	export let opacity = 0.5;
 
 	let class_ = '';
 	export { class_ as class };
@@ -17,6 +18,7 @@
 	style:--width={width}
 	style:--height={height}
 	style:--color={color}
+	style:--opacity={opacity}
 />
 
 <style lang="scss">
@@ -32,7 +34,7 @@
 		pointer-events: none;
 
 		background-color: var(--color);
-		opacity: 0.5;
+		opacity: var(--opacity);
 
 		&:hover {
 			$hoverSize: 2px;
