@@ -15,37 +15,48 @@
 	export let hoveredCellY: number | null = null;
 </script>
 
-<DataTable
-	lines={unmasked ? qr.unmaskedLines : qr.lines}
-	on:pointermove={(e) => {
-		hoveredCellX = Math.floor(e.offsetX / 8); // 8 = cell size
-		hoveredCellY = Math.floor(e.offsetY / 8); // TODO: use $cellSize from SCSS
+<div>
+	<DataTable
+		lines={unmasked ? qr.unmaskedLines : qr.lines}
+		on:pointermove={(e) => {
+			hoveredCellX = Math.floor(e.offsetX / 8); // 8 = cell size
+			hoveredCellY = Math.floor(e.offsetY / 8); // TODO: use $cellSize from SCSS
 
-		if (hoveredCellX >= qr.size || hoveredCellY >= qr.size) {
+			if (hoveredCellX >= qr.size || hoveredCellY >= qr.size) {
+				hoveredCellX = null;
+				hoveredCellY = null;
+			}
+		}}
+		on:pointerleave={() => {
 			hoveredCellX = null;
 			hoveredCellY = null;
-		}
-	}}
-	on:pointerleave={() => {
-		hoveredCellX = null;
-		hoveredCellY = null;
-	}}
->
-	<!-- Hovered cell -->
-	{#if hoveredCellX != null && hoveredCellY != null}
-		<DataTableOverlay x={hoveredCellX} y={hoveredCellY} color="magenta" opacity={0.8} outlined />
-	{/if}
+		}}
+	>
+		<!-- Hovered cell -->
+		{#if hoveredCellX != null && hoveredCellY != null}
+			<DataTableOverlay x={hoveredCellX} y={hoveredCellY} color="magenta" opacity={0.8} outlined />
+		{/if}
 
-	<QrOverlays {qr} />
+		<QrOverlays {qr} />
 
-	{#if unmasked}
-		<!-- Mask overlay -->
-		{#each { length: qr.size } as _, y}
-			{#each { length: qr.size } as _, x}
-				{#if getCellType(qr.size, y, x) == CellType.Data && masks[qr.mask](x, y)}
-					<DataTableOverlay {x} {y} color="teal" opacity={0.3} />
-				{/if}
+		{#if unmasked}
+			<!-- Mask overlay -->
+			{#each { length: qr.size } as _, y}
+				{#each { length: qr.size } as _, x}
+					{#if getCellType(qr.size, y, x) == CellType.Data && masks[qr.mask](x, y)}
+						<DataTableOverlay {x} {y} color="teal" opacity={0.3} />
+					{/if}
+				{/each}
 			{/each}
-		{/each}
-	{/if}
-</DataTable>
+		{/if}
+	</DataTable>
+</div>
+
+<style lang="scss">
+	div {
+		width: max-content;
+		height: max-content;
+
+		cursor: crosshair;
+	}
+</style>
