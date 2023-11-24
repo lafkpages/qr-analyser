@@ -40,6 +40,7 @@
 
 		&.outlined {
 			outline: 2px solid var(--color);
+			z-index: 4;
 		}
 
 		&:hover {
@@ -50,6 +51,10 @@
 			margin-left: calc(-1 * $hoverSize);
 
 			z-index: 3;
+		}
+
+		&:hover.outlined {
+			z-index: 5;
 		}
 	}
 </style>
