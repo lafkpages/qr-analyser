@@ -1,2 +1,1 @@
-$_cellSize: 1;
-$cellSize: clamp(1px, MIN(#{$_cellSize}vw, #{$_cellSize}vh), 16px);
+$cellSize: clamp(1px, 1vw, 16px);
