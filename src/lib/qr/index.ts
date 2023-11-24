@@ -1,6 +1,6 @@
-import * as qrs from './qrs';
+import qrs, { qrIds } from './qrs';
 
-export { qrs };
+export { qrs, qrIds };
 
 export function parseQr(qr: string | Qr) {
 	if (typeof qr == 'string') {

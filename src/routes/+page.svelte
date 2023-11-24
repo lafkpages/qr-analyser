@@ -1,10 +1,15 @@
 <script lang="ts">
-	import { qrs, parseQr } from '$lib/qr';
+	import type { PageData } from './$types';
+
+	import { parseQr } from '$lib/qr';
+	import qrs, { validateQrId } from '$lib/qr/qrs';
 
 	import Qr from '$components/Qr.svelte';
 	import QrMasks from '$components/QrMasks.svelte';
 
-	let qrId: keyof typeof qrs = 'wikipedia';
+	export let data: PageData;
+
+	let qrId = validateQrId(data.qr);
 	$: qr = parseQr(qrs[qrId]);
 </script>
 
