@@ -65,6 +65,7 @@
 		<h3>QR info</h3>
 		<span>Size: {qr.size}</span>
 		<span>Version: {qr.version}</span>
+		<span>Raw mask: {qr.rawMaskStr} ({qr.rawMask})</span>
 		<span>Mask: {qr.maskStr} ({qr.mask})</span>
 
 		<QrMask mask={qr.mask} />

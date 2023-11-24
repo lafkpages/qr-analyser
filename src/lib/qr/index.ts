@@ -86,12 +86,21 @@ export class Qr {
 		}
 	}
 
-	get maskStr() {
+	get rawMaskStr() {
 		return this.lines[8].substring(2, 5);
 	}
 
+	get rawMask() {
+		return parseInt(this.rawMaskStr, 2);
+	}
+
 	get mask() {
-		return parseInt(this.maskStr, 2);
+		return this.rawMask ^ 5;
+		// XOR with 101
+	}
+
+	get maskStr() {
+		return this.mask.toString(2).padStart(3, '0');
 	}
 
 	/**
