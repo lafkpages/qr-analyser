@@ -66,6 +66,10 @@
 			h3:first-of-type {
 				margin-block-start: 0px;
 			}
+
+			&.cell-info p {
+				margin-block-start: 0px;
+			}
 		}
 
 		div.key {
