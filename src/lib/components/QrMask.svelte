@@ -16,4 +16,14 @@
 	);
 </script>
 
-<DataTable {lines} />
+<div>
+	<DataTable {lines} />
+</div>
+
+<style lang="scss">
+	div {
+		border: 1px solid black;
+		width: max-content;
+		height: max-content;
+	}
+</style>

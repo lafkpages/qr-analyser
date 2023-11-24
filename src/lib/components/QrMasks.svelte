@@ -29,10 +29,6 @@
 				margin-block-start: 0px;
 				margin-block-end: 0px;
 			}
-
-			:global(.data-table) {
-				border: 1px solid black;
-			}
 		}
 	}
 </style>
