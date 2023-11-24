@@ -63,7 +63,7 @@
 		<h3>Color key</h3>
 
 		<ul>
-			{#each [['green', cellTypeLabels[CellType.PositionPattern]], ['yellow', cellTypeLabels[CellType.TimingPattern]], ['cyan', 'mask data'], ['orange', 'data encoding'], ['magenta', 'hovered cell']] as [color, label]}
+			{#each [['green', cellTypeLabels[CellType.PositionPattern]], ['yellow', cellTypeLabels[CellType.TimingPattern]], ['cyan', 'mask data'], ['orange', 'data encoding'], ['teal', 'inverted cell'], ['magenta', 'hovered cell']] as [color, label]}
 				<li>
 					<div style:--color={color} />
 					{label}
