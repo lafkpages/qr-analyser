@@ -51,6 +51,7 @@
 					width: $cellSize;
 					height: $cellSize;
 					aspect-ratio: 1;
+					padding: 0px;
 
 					&.on {
 						background-color: black;
