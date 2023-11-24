@@ -7,7 +7,7 @@
 	import { parseQr } from '$lib/qr';
 	import qrs, { validateQrId } from '$lib/qr/qrs';
 
-	import Qr from '$components/Qr.svelte';
+	import Qr from '$components/QrAnalysis.svelte';
 	import QrMasks from '$components/QrMasks.svelte';
 
 	export let data: PageData;
