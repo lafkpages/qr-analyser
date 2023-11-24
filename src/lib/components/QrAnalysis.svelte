@@ -17,23 +17,32 @@
 
 	<div class="info">
 		<h3>QR info</h3>
-		<span>Size: {qr.size}</span>
-		<span>Version: {qr.version}</span>
-		<span>Raw mask: {qr.rawMaskStr} ({qr.rawMask})</span>
-		<span>Mask: {qr.maskStr} ({qr.mask})</span>
+		<p>
+			<span>Size: {qr.size}</span>
+			<br />
+			<span>Version: {qr.version}</span>
+			<br />
+			<span>Raw mask: {qr.rawMaskStr} ({qr.rawMask})</span>
+			<br />
+			<span>Mask: {qr.maskStr} ({qr.mask})</span>
+		</p>
 
 		<QrMask mask={qr.mask} />
 	</div>
 
-	<div class="info cell-info">
+	<div class="info">
 		<h3>Cell info</h3>
-		{#if hoveredCellX != null && hoveredCellY != null}
-			<span>X: {hoveredCellX}</span>
-			<span>Y: {hoveredCellY}</span>
-			<span>Cell type: {cellTypeLabels[getCellType(qr.size, hoveredCellY, hoveredCellX)]}</span>
-		{:else}
-			<p>Hover over a cell to see its info.</p>
-		{/if}
+		<p>
+			{#if hoveredCellX != null && hoveredCellY != null}
+				<span>X: {hoveredCellX}</span>
+				<br />
+				<span>Y: {hoveredCellY}</span>
+				<br />
+				<span>Cell type: {cellTypeLabels[getCellType(qr.size, hoveredCellY, hoveredCellX)]}</span>
+			{:else}
+				Hover over a cell to see its info.
+			{/if}
+		</p>
 	</div>
 
 	<div class="key">
@@ -67,7 +76,7 @@
 				margin-block-start: 0px;
 			}
 
-			&.cell-info p {
+			p {
 				margin-block-start: 0px;
 			}
 		}
