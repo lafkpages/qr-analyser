@@ -22,7 +22,7 @@ QR code: <select
 		// wait for qrId to update
 		await tick();
 
-		await goto(`/?qr=${qrId}`);
+		goto(`/?qr=${qrId}`);
 	}}
 >
 	<option value="wikipedia">Wikipedia</option>
