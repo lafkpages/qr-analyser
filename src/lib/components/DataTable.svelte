@@ -1,27 +1,9 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
 	export let lines: string[];
-
-	let tbody: HTMLElement;
-
-	onMount(() => {
-		if (document.body.classList.contains('data-table-mounted')) {
-			return;
-		}
-
-		document.body.classList.add('data-table-mounted');
-
-		const s = document.createElement('style');
-		s.textContent = `body {
-      --cell-size: ${tbody.getElementsByTagName('td')[0].clientWidth}px;
-    }`;
-		document.head.appendChild(s);
-	});
 </script>
 
 <table class="data-table" on:pointermove on:pointerleave>
-	<tbody bind:this={tbody}>
+	<tbody>
 		{#each lines as line, lineIndex (lineIndex)}
 			<tr>
 				{#each line as cell, cellIndex (cellIndex)}
@@ -35,7 +17,7 @@
 </table>
 
 <style lang="scss">
-	$cellSize: 8px;
+	@use '$lib/styles/DataTable' as *;
 
 	table {
 		border-spacing: 0px;

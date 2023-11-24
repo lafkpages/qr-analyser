@@ -92,6 +92,8 @@
 </div>
 
 <style lang="scss">
+	@use '$lib/styles/DataTable' as *;
+
 	div.qr {
 		display: flex;
 		gap: 12px;
@@ -126,8 +128,8 @@
 					gap: 4px;
 
 					div {
-						width: var(--cell-size);
-						height: var(--cell-size);
+						width: $cellSize;
+						height: $cellSize;
 						aspect-ratio: 1;
 
 						background-color: var(--color);

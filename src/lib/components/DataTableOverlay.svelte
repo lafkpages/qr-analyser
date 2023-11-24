@@ -20,12 +20,14 @@
 />
 
 <style lang="scss">
+	@use '$lib/styles/DataTable' as *;
+
 	div.overlay {
 		position: absolute;
-		top: calc(var(--y) * var(--cell-size));
-		left: calc(var(--x) * var(--cell-size));
-		width: calc(var(--width) * var(--cell-size));
-		height: calc(var(--height) * var(--cell-size));
+		top: calc(var(--y) * $cellSize);
+		left: calc(var(--x) * $cellSize);
+		width: calc(var(--width) * $cellSize);
+		height: calc(var(--height) * $cellSize);
 		z-index: 2;
 		pointer-events: none;
 
