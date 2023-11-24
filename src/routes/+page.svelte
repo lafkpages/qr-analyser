@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 
+	import { tick } from 'svelte';
+	import { goto } from '$app/navigation';
+
 	import { parseQr } from '$lib/qr';
 	import qrs, { validateQrId } from '$lib/qr/qrs';
 
@@ -13,7 +16,15 @@
 	$: qr = parseQr(qrs[qrId]);
 </script>
 
-QR code: <select bind:value={qrId}>
+QR code: <select
+	bind:value={qrId}
+	on:input={async () => {
+		// wait for qrId to update
+		await tick();
+
+		await goto(`/?qr=${qrId}`);
+	}}
+>
 	<option value="wikipedia">Wikipedia</option>
 	<option value="wifi">WiFi</option>
 </select>
