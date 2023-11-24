@@ -7,6 +7,7 @@
 	import DataTableOverlay from '$components/DataTableOverlay.svelte';
 	import QrMask from './QrMask.svelte';
 	import QrOverlays from './QrOverlays.svelte';
+	import { masks } from '$lib/qr/masks';
 
 	export let qr: Qr;
 
@@ -80,6 +81,15 @@
 
 	<DataTable lines={qr.unmaskedLines}>
 		<QrOverlays {qr} />
+
+		<!-- Mask overlay -->
+		{#each { length: qr.size } as _, y}
+			{#each { length: qr.size } as _, x}
+				{#if getCellType(qr.size, y, x) == CellType.Data && masks[qr.mask](x, y)}
+					<DataTableOverlay {x} {y} width={1} height={1} color="teal" />
+				{/if}
+			{/each}
+		{/each}
 	</DataTable>
 </div>
 
