@@ -6,6 +6,7 @@
 
 	export let color = 'red';
 	export let opacity = 0.5;
+	export let outlined = false;
 
 	let class_ = '';
 	export { class_ as class };
@@ -13,6 +14,7 @@
 
 <div
 	class="overlay {class_}"
+	class:outlined
 	style:--x={x}
 	style:--y={y}
 	style:--width={width}
@@ -35,6 +37,10 @@
 
 		background-color: var(--color);
 		opacity: var(--opacity);
+
+		&.outlined {
+			outline: 2px solid var(--color);
+		}
 
 		&:hover {
 			$hoverSize: 2px;

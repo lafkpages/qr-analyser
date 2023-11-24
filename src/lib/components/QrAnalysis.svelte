@@ -59,13 +59,6 @@
 		display: flex;
 		gap: 12px;
 
-		:global(.data-table) {
-			:global(.hovered-cell) {
-				opacity: 0.8;
-				outline: 2px solid magenta;
-			}
-		}
-
 		div.info {
 			display: flex;
 			flex-direction: column;

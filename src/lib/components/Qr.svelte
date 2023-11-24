@@ -33,7 +33,7 @@
 >
 	<!-- Hovered cell -->
 	{#if hoveredCellX != null && hoveredCellY != null}
-		<DataTableOverlay x={hoveredCellX} y={hoveredCellY} color="magenta" class="hovered-cell" />
+		<DataTableOverlay x={hoveredCellX} y={hoveredCellY} color="magenta" opacity={0.8} outlined />
 	{/if}
 
 	<QrOverlays {qr} />
