@@ -1,6 +1,21 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
+	import { cellSize } from '$lib/stores/DataTable';
+
 	export let lines: string[];
+
+	const updateCellSize = () => {
+		const newVal = document.querySelector('table.data-table tbody tr td.cell')?.clientWidth;
+		if (newVal) {
+			cellSize.set(newVal);
+		}
+	};
+
+	onMount(updateCellSize);
 </script>
+
+<svelte:window on:resize={updateCellSize} />
 
 <table class="data-table" on:pointermove on:pointerleave>
 	<tbody>

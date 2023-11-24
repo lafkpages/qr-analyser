@@ -4,6 +4,8 @@
 	import { getCellType, CellType } from '$lib/qr';
 	import { masks } from '$lib/qr/masks';
 
+	import { cellSize } from '$lib/stores/DataTable';
+
 	import DataTable from '$components/DataTable.svelte';
 	import DataTableOverlay from '$components/DataTableOverlay.svelte';
 	import QrOverlays from '$components/QrOverlays.svelte';
@@ -19,8 +21,8 @@
 	<DataTable
 		lines={unmasked ? qr.unmaskedLines : qr.lines}
 		on:pointermove={(e) => {
-			hoveredCellX = Math.floor(e.offsetX / 8); // 8 = cell size
-			hoveredCellY = Math.floor(e.offsetY / 8); // TODO: use $cellSize from SCSS
+			hoveredCellX = Math.floor(e.offsetX / $cellSize);
+			hoveredCellY = Math.floor(e.offsetY / $cellSize);
 
 			if (hoveredCellX >= qr.size || hoveredCellY >= qr.size) {
 				hoveredCellX = null;
