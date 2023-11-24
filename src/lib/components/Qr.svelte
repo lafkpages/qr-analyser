@@ -79,7 +79,7 @@
 		{#each { length: qr.size } as _, y}
 			{#each { length: qr.size } as _, x}
 				{#if getCellType(qr.size, y, x) == CellType.Data && masks[qr.mask](x, y)}
-					<DataTableOverlay {x} {y} color="teal" />
+					<DataTableOverlay {x} {y} color="teal" opacity={0.3} />
 				{/if}
 			{/each}
 		{/each}
