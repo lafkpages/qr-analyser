@@ -1,4 +1,5 @@
 import qrs, { qrIds } from './qrs';
+import { masks } from './masks';
 
 export { qrs, qrIds };
 
@@ -141,5 +142,37 @@ export class Qr {
 		return {
 			next: () => ({ value: lines[++index], done: !(index in lines) })
 		};
+	}
+
+	get unmaskedLines() {
+		const unmaskedLines = [];
+
+		for (const _y in this.lines) {
+			const y = parseInt(_y);
+
+			const line = this.lines[y];
+
+			// Line 7 is all position/timing patterns
+			if (y == 6) {
+				unmaskedLines.push(line);
+				continue;
+			}
+
+			let unmaskedLine = '';
+			for (let x = 0; x < line.length; x++) {
+				const cellType = getCellType(this.size, y, x);
+
+				// Only unmask data cells
+				if (cellType == CellType.Data) {
+					unmaskedLine += masks[this.mask](x, y) ? '1' : '0';
+				} else {
+					unmaskedLine += line[x];
+				}
+			}
+
+			unmaskedLines.push(unmaskedLine);
+		}
+
+		return unmaskedLines;
 	}
 }
