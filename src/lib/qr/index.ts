@@ -86,19 +86,39 @@ export class Qr {
 		}
 	}
 
+	/**
+	 * The raw QR code mask bits.
+	 * @example "100"
+	 * @see Qr.rawMask
+	 */
 	get rawMaskStr() {
 		return this.lines[8].substring(2, 5);
 	}
 
+	/**
+	 * The raw QR code mask bits as a number.
+	 * @example 4
+	 * @see Qr.rawMaskStr
+	 */
 	get rawMask() {
 		return parseInt(this.rawMaskStr, 2);
 	}
 
+	/**
+	 * The mask used to generate the QR code.
+	 * @example 1
+	 * @see Qr.maskStr
+	 */
 	get mask() {
 		return this.rawMask ^ 5;
 		// XOR with 101
 	}
 
+	/**
+	 * The mask used to generate the QR code as a string of bits.
+	 * @example "001"
+	 * @see Qr.mask
+	 */
 	get maskStr() {
 		return this.mask.toString(2).padStart(3, '0');
 	}
