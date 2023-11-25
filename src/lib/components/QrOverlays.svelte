@@ -12,6 +12,11 @@
 <!-- Encoding -->
 <DataTableOverlay x={qr.size - 2} y={qr.size - 2} width={2} height={2} color="orange" />
 
+<!-- Length -->
+{#if qr.encoding == 4}
+	<DataTableOverlay x={qr.size - 2} y={qr.size - 6} width={2} height={4} color="pink" />
+{/if}
+
 <!-- Position patterns -->
 <DataTableOverlay x={0} y={0} width={8} height={8} color="green" />
 <DataTableOverlay x={qr.size - 8} y={0} width={8} height={8} color="green" />
