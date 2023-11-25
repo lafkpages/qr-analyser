@@ -27,6 +27,8 @@ export const cellTypeLabels = [
 	'data'
 ];
 
+export const encodingLabels = [, 'numeric', 'alphanumeric', 'byte', 'kanji'];
+
 export class Qr {
 	lines: string[];
 
