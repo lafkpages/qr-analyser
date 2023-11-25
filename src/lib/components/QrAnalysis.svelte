@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Qr as QrType } from '$lib/qr';
 
-	import { CellType, cellTypeLabels } from '$lib/qr';
+	import { CellType, cellTypeLabels, encodingLabels } from '$lib/qr';
 
 	import Qr from '$components/Qr.svelte';
 	import QrMask from '$components/QrMask.svelte';
@@ -59,7 +59,7 @@
 		<div class="info">
 			<h3>QR encoding</h3>
 			<p>
-				<span>Encoding: {qr.encodingStr} ({qr.encoding})</span>
+				<span>Encoding: {encodingLabels[qr.encoding]} - {qr.encodingStr} ({qr.encoding})</span>
 			</p>
 
 			<p>
