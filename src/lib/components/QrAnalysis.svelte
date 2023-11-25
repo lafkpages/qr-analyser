@@ -39,6 +39,8 @@
 				<span>Version: {qr.version}</span>
 				<br />
 				<span>Encoding: {encodingLabels[qr.encoding]} - {qr.encodingStr} ({qr.encoding})</span>
+				<br />
+				<span>Data length: {qr.dataLength} chunks (bits {qr.dataLengthStr})</span>
 			</p>
 			<p>
 				The QR encoding is specified in the bottom right corner of the QR code, shown in orange.
