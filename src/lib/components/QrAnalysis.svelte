@@ -25,6 +25,11 @@
 	<div class="left">
 		<Qr {qr} bind:selectedColors bind:hoveredCellX bind:hoveredCellY />
 
+		<!-- QR data length -->
+		<div class="qr-data-length-indicator" style:--top={qr.size - 6}>
+			<SizeIndicator vertical>4</SizeIndicator>
+		</div>
+
 		<!-- QR encoding -->
 		<div class="qr-encoding-indicator" style:--top={qr.size - 2}>
 			<SizeIndicator vertical>2</SizeIndicator>
@@ -139,6 +144,13 @@
 			width: max-content;
 			position: relative;
 			margin-right: 36px;
+
+			.qr-data-length-indicator {
+				position: absolute;
+				top: calc(var(--top) * $cellSize);
+				left: 100%;
+				height: calc(4 * $cellSize);
+			}
 
 			.qr-encoding-indicator {
 				position: absolute;
