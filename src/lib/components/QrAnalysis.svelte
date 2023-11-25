@@ -37,6 +37,11 @@
 				<span>Size: {qr.size}</span>
 				<br />
 				<span>Version: {qr.version}</span>
+				<br />
+				<span>Encoding: {encodingLabels[qr.encoding]} - {qr.encodingStr} ({qr.encoding})</span>
+			</p>
+			<p>
+				The QR encoding is specified in the bottom right corner of the QR code, shown in orange.
 			</p>
 		</div>
 
@@ -53,17 +58,6 @@
 			<p>
 				The raw mask bits are bellow the top left position pattern, highlighted in blue. To get the
 				actual mask, these bits must be XOR'ed with 101.
-			</p>
-		</div>
-
-		<div class="info">
-			<h3>QR encoding</h3>
-			<p>
-				<span>Encoding: {encodingLabels[qr.encoding]} - {qr.encodingStr} ({qr.encoding})</span>
-			</p>
-
-			<p>
-				The QR encoding is specified in the bottom right corner of the QR code, shown in orange.
 			</p>
 		</div>
 
