@@ -24,20 +24,34 @@
 				<span>Size: {qr.size}</span>
 				<br />
 				<span>Version: {qr.version}</span>
-				<br />
-				<span>Raw mask: {qr.rawMaskStr} ({qr.rawMask})</span>
-				<br />
-				<span>Raw encoding: {qr.rawEncoding}</span>
 			</p>
 		</div>
 
 		<div class="info">
 			<h3>QR mask</h3>
 			<p>
-				<span>Mask: {qr.maskStr} ({qr.mask})</span>
+				<span>Raw mask: {qr.rawMaskStr} ({qr.rawMask})</span>
+				<br />
+				<span>Mask: {qr.rawMaskStr} ^ 101 = {qr.maskStr} ({qr.mask})</span>
+			</p>
+			<p>
+				<QrMask mask={qr.mask} />
+			</p>
+			<p>
+				The raw mask bits are bellow the top left position pattern, highlighted in blue. To get the
+				actual mask, these bits must be XOR'ed with 101.
+			</p>
+		</div>
+
+		<div class="info">
+			<h3>QR encoding</h3>
+			<p>
+				<span>Encoding: {qr.encodingStr} ({qr.encoding})</span>
 			</p>
 
-			<QrMask mask={qr.mask} />
+			<p>
+				The QR encoding is specified in the bottom right corner of the QR code, shown in orange.
+			</p>
 		</div>
 
 		<div class="info">
@@ -59,7 +73,7 @@
 			</p>
 		</div>
 
-		<div class="key">
+		<div class="info key">
 			<h3>Color key</h3>
 
 			<ul>
@@ -90,10 +104,13 @@
 			display: flex;
 			gap: 12px;
 			flex-grow: 1;
+			flex-wrap: wrap;
 
 			div.info {
 				display: flex;
 				flex-direction: column;
+				border: 1px dashed grey;
+				padding: 8px;
 
 				h3:first-of-type {
 					margin-block-start: 0px;
@@ -101,6 +118,10 @@
 
 				p {
 					margin-block-start: 0px;
+				}
+
+				:last-child {
+					margin-block-end: 0px;
 				}
 			}
 

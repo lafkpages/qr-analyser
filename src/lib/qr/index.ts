@@ -104,13 +104,17 @@ export class Qr {
 		return (this.size - 17) / 4;
 	}
 
-	get rawEncoding() {
+	get encodingStr() {
 		return (
 			this.getCell(this.size - 1, this.size - 1, true) +
 			this.getCell(this.size - 2, this.size - 1, true) +
 			this.getCell(this.size - 1, this.size - 2, true) +
 			this.getCell(this.size - 2, this.size - 2, true)
 		);
+	}
+
+	get encoding() {
+		return parseInt(this.encodingStr, 2);
 	}
 
 	[Symbol.iterator]() {
