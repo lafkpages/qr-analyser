@@ -38,7 +38,7 @@
 				<br />
 				<span>Version: {qr.version}</span>
 				<br />
-				<span>Encoding: {encodingLabels[qr.encoding]} - {qr.encodingStr} ({qr.encoding})</span>
+				<span>Encoding: {qr.encoding} - {encodingLabels[qr.encoding]} (bits {qr.encodingStr})</span>
 				<br />
 				<span>Data length: {qr.dataLength} chunks (bits {qr.dataLengthStr})</span>
 			</p>
@@ -50,7 +50,7 @@
 		<div class="info">
 			<h3>QR mask</h3>
 			<p>
-				<span>Raw mask: {qr.rawMaskStr} ({qr.rawMask})</span>
+				<span>Raw mask: {qr.rawMask} (bits {qr.rawMaskStr})</span>
 				<br />
 				<span>Mask: {qr.rawMaskStr} ^ 101 = {qr.maskStr} ({qr.mask})</span>
 			</p>
