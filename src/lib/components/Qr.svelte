@@ -16,6 +16,8 @@
 	export let hoveredCellX: number | null = null;
 	export let hoveredCellY: number | null = null;
 
+	export let selectedColors: string[];
+
 	let container: HTMLDivElement;
 
 	function handlePointerMove(e: PointerEvent | TouchEvent) {
@@ -54,13 +56,13 @@
 		on:touchend={handlePointerLeave}
 	>
 		<!-- Hovered cell -->
-		{#if hoveredCellX != null && hoveredCellY != null}
+		{#if (selectedColors?.includes('magenta') ?? true) && hoveredCellX != null && hoveredCellY != null}
 			<DataTableOverlay x={hoveredCellX} y={hoveredCellY} color="magenta" opacity={0.8} outlined />
 		{/if}
 
-		<QrOverlays {qr} />
+		<QrOverlays {qr} bind:selectedColors />
 
-		{#if unmasked}
+		{#if (selectedColors?.includes('teal') ?? true) && unmasked}
 			<!-- Mask overlay -->
 			{#each { length: qr.size } as _, y}
 				{#each { length: qr.size } as _, x}

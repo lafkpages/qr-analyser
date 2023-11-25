@@ -7,17 +7,17 @@
 	import QrMask from '$components/QrMask.svelte';
 	import SizeIndicator from '$components/SizeIndicator.svelte';
 
-	import { cellSize } from '$lib/stores/DataTable';
-
 	export let qr: QrType;
 
 	let hoveredCellX: number | null = null;
 	let hoveredCellY: number | null = null;
+
+	let selectedColors: string[];
 </script>
 
 <div class="qr">
 	<div class="left">
-		<Qr {qr} bind:hoveredCellX bind:hoveredCellY />
+		<Qr {qr} bind:selectedColors bind:hoveredCellX bind:hoveredCellY />
 
 		<!-- QR encoding -->
 		<div class="qr-encoding-indicator" style:--top={qr.size - 2}>
@@ -87,9 +87,29 @@
 
 			<ul>
 				{#each [['green', cellTypeLabels[CellType.PositionPattern]], ['yellow', cellTypeLabels[CellType.TimingPattern]], ['cyan', 'mask data'], ['orange', 'data encoding'], ['pink', 'data length'], ['teal', 'inverted cell'], ['magenta', 'hovered cell']] as [color, label]}
+					{@const id = `key-${color}-${crypto.randomUUID()}`}
 					<li>
-						<div style:--color={color} />
-						{label}
+						<input
+							type="checkbox"
+							style:--color={color}
+							checked={selectedColors?.includes(color) ?? true}
+							{id}
+							on:input={(e) => {
+								if (!(e.target instanceof HTMLInputElement)) {
+									return;
+								}
+
+								if (e.target.checked) {
+									selectedColors.push(color);
+									selectedColors = selectedColors;
+								} else {
+									selectedColors = selectedColors.filter((c) => c != color);
+								}
+							}}
+						/>
+						<label for={id}>
+							{label}
+						</label>
 					</li>
 				{/each}
 			</ul>
@@ -97,7 +117,7 @@
 	</div>
 
 	<div class="right">
-		<Qr {qr} bind:hoveredCellX bind:hoveredCellY unmasked />
+		<Qr {qr} bind:selectedColors bind:hoveredCellX bind:hoveredCellY unmasked />
 	</div>
 </div>
 
@@ -162,12 +182,8 @@
 						align-items: center;
 						gap: 4px;
 
-						div {
-							width: MAX($cellSize, 8px);
-							height: MAX($cellSize, 8px);
-							aspect-ratio: 1;
-
-							background-color: var(--color);
+						input {
+							accent-color: var(--color);
 						}
 					}
 				}
