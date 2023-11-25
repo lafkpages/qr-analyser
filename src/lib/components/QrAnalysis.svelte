@@ -116,6 +116,7 @@
 		.left {
 			width: max-content;
 			position: relative;
+			margin-right: 36px;
 
 			.qr-encoding-indicator {
 				position: absolute;
