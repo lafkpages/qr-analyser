@@ -16,16 +16,18 @@
 	export let hoveredCellX: number | null = null;
 	export let hoveredCellY: number | null = null;
 
+	let container: HTMLDivElement;
+
 	function handlePointerMove(e: PointerEvent | TouchEvent) {
 		let x: number, y: number;
 		if ('touches' in e) {
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
+			x = e.touches[0].clientX - container.offsetLeft;
+			y = e.touches[0].clientY - container.offsetTop;
 
 			e.preventDefault();
 		} else {
-			x = e.clientX;
-			y = e.clientY;
+			x = e.offsetX;
+			y = e.offsetY;
 		}
 
 		hoveredCellX = Math.floor(x / $cellSize);
@@ -43,7 +45,7 @@
 	}
 </script>
 
-<div>
+<div bind:this={container}>
 	<DataTable
 		lines={unmasked ? qr.unmaskedLines : qr.lines}
 		on:pointermove={handlePointerMove}
