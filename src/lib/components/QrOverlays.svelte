@@ -1,11 +1,14 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import type { Qr } from '$lib/qr';
 
 	import DataTableOverlay from './DataTableOverlay.svelte';
 
 	export let qr: Qr;
 
-	export let selectedColors = ['green', 'yellow', 'cyan', 'orange', 'pink', 'teal', 'magenta'];
+	export let selectedColors = (browser
+		? JSON.parse(localStorage.getItem('selectedColors') || 'null')
+		: null) || ['green', 'yellow', 'cyan', 'orange', 'pink', 'teal', 'magenta'];
 </script>
 
 <!-- Mask data -->

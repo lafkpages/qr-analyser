@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Qr as QrType } from '$lib/qr';
 
+	import { browser } from '$app/environment';
+
 	import { CellType, cellTypeLabels, encodingLabels } from '$lib/qr';
 
 	import Qr from '$components/Qr.svelte';
@@ -13,6 +15,10 @@
 	let hoveredCellY: number | null = null;
 
 	let selectedColors: string[];
+
+	$: browser &&
+		selectedColors &&
+		localStorage.setItem('selectedColors', JSON.stringify(selectedColors));
 </script>
 
 <div class="qr">
