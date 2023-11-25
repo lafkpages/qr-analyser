@@ -7,6 +7,8 @@
 	import QrMask from '$components/QrMask.svelte';
 	import SizeIndicator from '$components/SizeIndicator.svelte';
 
+	import { cellSize } from '$lib/stores/DataTable';
+
 	export let qr: QrType;
 
 	let hoveredCellX: number | null = null;
@@ -17,6 +19,12 @@
 	<div class="left">
 		<Qr {qr} bind:hoveredCellX bind:hoveredCellY />
 
+		<!-- QR encoding -->
+		<div class="qr-encoding-indicator" style:--top={qr.size - 2}>
+			<SizeIndicator vertical>2</SizeIndicator>
+		</div>
+
+		<!-- QR width -->
 		<SizeIndicator>
 			{qr.size}
 		</SizeIndicator>
@@ -107,6 +115,14 @@
 
 		.left {
 			width: max-content;
+			position: relative;
+
+			.qr-encoding-indicator {
+				position: absolute;
+				top: calc(var(--top) * $cellSize);
+				left: 100%;
+				height: calc(2 * $cellSize);
+			}
 		}
 
 		.middle {
