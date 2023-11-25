@@ -26,6 +26,8 @@
 				<span>Version: {qr.version}</span>
 				<br />
 				<span>Raw mask: {qr.rawMaskStr} ({qr.rawMask})</span>
+				<br />
+				<span>Raw encoding: {qr.rawEncoding}</span>
 			</p>
 		</div>
 

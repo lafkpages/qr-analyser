@@ -104,6 +104,15 @@ export class Qr {
 		return (this.size - 17) / 4;
 	}
 
+	get rawEncoding() {
+		return (
+			this.getCell(this.size - 1, this.size - 1, true) +
+			this.getCell(this.size - 2, this.size - 1, true) +
+			this.getCell(this.size - 1, this.size - 2, true) +
+			this.getCell(this.size - 2, this.size - 2, true)
+		);
+	}
+
 	[Symbol.iterator]() {
 		let index = -1;
 		const lines = this.lines;
