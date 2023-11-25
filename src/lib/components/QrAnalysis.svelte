@@ -153,8 +153,7 @@
 		}
 	}
 
-	// If screen is <1000px wide
-	@media (max-width: 1000px) {
+	@media (max-width: 2020px) {
 		div.qr {
 			flex-direction: column;
 
