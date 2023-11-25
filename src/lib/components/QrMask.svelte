@@ -22,7 +22,7 @@
 
 <style lang="scss">
 	div {
-		border: 1px solid black;
+		border: 1px dashed black;
 		width: max-content;
 		height: max-content;
 	}
