@@ -95,7 +95,7 @@
 <style lang="scss">
 	@use '$lib/styles/DataTable' as *;
 
-	div.qr {
+	.qr {
 		position: relative;
 		display: flex;
 		gap: 12px;
@@ -106,7 +106,7 @@
 			flex-grow: 1;
 			flex-wrap: wrap;
 
-			div.info {
+			.info {
 				display: flex;
 				flex-direction: column;
 				border: 1px dashed grey;
@@ -125,7 +125,7 @@
 				}
 			}
 
-			div.key {
+			.key {
 				margin-left: auto;
 
 				h3:first-of-type {
@@ -141,8 +141,8 @@
 						gap: 4px;
 
 						div {
-							width: $cellSize;
-							height: $cellSize;
+							width: MAX($cellSize, 8px);
+							height: MAX($cellSize, 8px);
 							aspect-ratio: 1;
 
 							background-color: var(--color);
@@ -161,6 +161,18 @@
 				position: absolute;
 				top: 0px;
 				right: 0px;
+			}
+		}
+	}
+
+	@media (max-width: 440px) {
+		div.qr {
+			.middle {
+				flex-direction: column;
+
+				.key {
+					margin-left: unset;
+				}
 			}
 		}
 	}
