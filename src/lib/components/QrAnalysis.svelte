@@ -4,7 +4,8 @@
 	import { CellType, cellTypeLabels } from '$lib/qr';
 
 	import Qr from '$components/Qr.svelte';
-	import QrMask from './QrMask.svelte';
+	import QrMask from '$components/QrMask.svelte';
+	import SizeIndicator from '$components/SizeIndicator.svelte';
 
 	export let qr: QrType;
 
@@ -15,6 +16,10 @@
 <div class="qr">
 	<div class="left">
 		<Qr {qr} bind:hoveredCellX bind:hoveredCellY />
+
+		<SizeIndicator>
+			{qr.size}
+		</SizeIndicator>
 	</div>
 
 	<div class="middle">
@@ -99,6 +104,10 @@
 		position: relative;
 		display: flex;
 		gap: 12px;
+
+		.left {
+			width: max-content;
+		}
 
 		.middle {
 			display: flex;
