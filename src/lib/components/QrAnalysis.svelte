@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Qr as QrType } from '$lib/qr';
 
-	import { CellType, cellTypeLabels, getCellType } from '$lib/qr';
+	import { CellType, cellTypeLabels } from '$lib/qr';
 
 	import Qr from '$components/Qr.svelte';
 	import QrMask from './QrMask.svelte';
@@ -46,15 +46,11 @@
 					<br />
 					<span>Y: {hoveredCellY}</span>
 					<br />
-					<span>Cell type: {cellTypeLabels[getCellType(qr.size, hoveredCellY, hoveredCellX)]}</span>
+					<span>Cell type: {cellTypeLabels[qr.getCellType(hoveredCellX, hoveredCellY)]}</span>
 					<br />
-					<span>Raw value: {qr.lines[hoveredCellY][hoveredCellX]}</span>
+					<span>Raw value: {qr.getCell(hoveredCellX, hoveredCellY)}</span>
 					<br />
-					<span>Unmasked value: {qr.unmaskedLines[hoveredCellY][hoveredCellX]}</span>
-					<!-- TODO: optimise ^^
-						Using unmaskedLines is slow because it has to calculate
-						all lines even though we only need one cell.
-					-->
+					<span>Unmasked value: {qr.getCell(hoveredCellX, hoveredCellY, true)}</span>
 				{:else}
 					Hover over a cell to see its info.
 				{/if}

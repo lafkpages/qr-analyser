@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Qr } from '$lib/qr';
 
-	import { getCellType, CellType } from '$lib/qr';
+	import { CellType } from '$lib/qr';
 	import { masks } from '$lib/qr/masks';
 
 	import { cellSize } from '$lib/stores/DataTable';
@@ -45,7 +45,7 @@
 			<!-- Mask overlay -->
 			{#each { length: qr.size } as _, y}
 				{#each { length: qr.size } as _, x}
-					{#if getCellType(qr.size, y, x) == CellType.Data && masks[qr.mask](x, y)}
+					{#if qr.getCellType(x, y) == CellType.Data && masks[qr.mask](x, y)}
 						<DataTableOverlay {x} {y} color="teal" opacity={0.3} />
 					{/if}
 				{/each}

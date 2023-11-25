@@ -27,37 +27,6 @@ export const cellTypeLabels = [
 	'data'
 ];
 
-export function getCellType(qrSize: number, row: number, col: number) {
-	if (
-		/* Top left */ (row < 8 && col < 8) ||
-		/* Top right */ (row < 8 && col >= qrSize - 8) ||
-		/* Bottom left */ (row >= qrSize - 8 && col < 8)
-	) {
-		return CellType.PositionPattern;
-	}
-
-	if (
-		(row == 6 && col >= 8 && col <= qrSize - 9) ||
-		(row >= 8 && row <= qrSize - 8 && col == 6) ||
-		(row == qrSize - 8 && col == 8)
-	) {
-		return CellType.TimingPattern;
-	}
-
-	// TODO: Alignment patterns
-
-	if (
-		(row == 8 && col <= 8) ||
-		(row <= 8 && col == 8) ||
-		(row == 8 && col >= qrSize - 8) ||
-		(row >= qrSize - 8 && col == 8)
-	) {
-		return CellType.FormatInfo;
-	}
-
-	return CellType.Data;
-}
-
 export class Qr {
 	lines: string[];
 
@@ -144,6 +113,50 @@ export class Qr {
 		};
 	}
 
+	getCellType(x: number, y: number) {
+		if (
+			/* Top left */ (y < 8 && x < 8) ||
+			/* Top right */ (y < 8 && x >= this.size - 8) ||
+			/* Bottom left */ (y >= this.size - 8 && x < 8)
+		) {
+			return CellType.PositionPattern;
+		}
+
+		if (
+			(y == 6 && x >= 8 && x <= this.size - 9) ||
+			(y >= 8 && y <= this.size - 8 && x == 6) ||
+			(y == this.size - 8 && x == 8)
+		) {
+			return CellType.TimingPattern;
+		}
+
+		// TODO: Alignment patterns
+
+		if (
+			(y == 8 && x <= 8) ||
+			(y <= 8 && x == 8) ||
+			(y == 8 && x >= this.size - 8) ||
+			(y >= this.size - 8 && x == 8)
+		) {
+			return CellType.FormatInfo;
+		}
+
+		return CellType.Data;
+	}
+
+	getCell(x: number, y: number, unmasked = false) {
+		if (unmasked) {
+			const cellType = this.getCellType(x, y);
+
+			// Only unmask data cells
+			if (cellType == CellType.Data) {
+				return masks[this.mask](x, y) ? (this.lines[y][x] == '1' ? '0' : '1') : this.lines[y][x];
+			}
+		}
+
+		return this.lines[y][x];
+	}
+
 	get unmaskedLines() {
 		const unmaskedLines = [];
 
@@ -160,14 +173,7 @@ export class Qr {
 
 			let unmaskedLine = '';
 			for (let x = 0; x < line.length; x++) {
-				const cellType = getCellType(this.size, y, x);
-
-				// Only unmask data cells
-				if (cellType == CellType.Data) {
-					unmaskedLine += masks[this.mask](x, y) ? (line[x] == '1' ? '0' : '1') : line[x];
-				} else {
-					unmaskedLine += line[x];
-				}
+				unmaskedLine += this.getCell(x, y, true);
 			}
 
 			unmaskedLines.push(unmaskedLine);
