@@ -119,6 +119,23 @@ export class Qr {
 		return parseInt(this.encodingStr, 2);
 	}
 
+	get dataLengthStr() {
+		return (
+			this.getCell(this.size - 1, this.size - 3, true) +
+			this.getCell(this.size - 2, this.size - 3, true) +
+			this.getCell(this.size - 1, this.size - 4, true) +
+			this.getCell(this.size - 2, this.size - 4, true) +
+			this.getCell(this.size - 1, this.size - 5, true) +
+			this.getCell(this.size - 2, this.size - 5, true) +
+			this.getCell(this.size - 1, this.size - 6, true) +
+			this.getCell(this.size - 2, this.size - 6, true)
+		);
+	}
+
+	get dataLength() {
+		return parseInt(this.dataLengthStr, 2);
+	}
+
 	[Symbol.iterator]() {
 		let index = -1;
 		const lines = this.lines;
