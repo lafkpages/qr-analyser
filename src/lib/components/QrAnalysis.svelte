@@ -116,7 +116,7 @@
 					margin-block-start: 0px;
 				}
 
-				p {
+				:not(h3:first-of-type) {
 					margin-block-start: 0px;
 				}
 
