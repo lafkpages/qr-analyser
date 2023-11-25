@@ -15,24 +15,41 @@
 
 	export let hoveredCellX: number | null = null;
 	export let hoveredCellY: number | null = null;
+
+	function handlePointerMove(e: PointerEvent | TouchEvent) {
+		let x: number, y: number;
+		if ('touches' in e) {
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+
+			e.preventDefault();
+		} else {
+			x = e.clientX;
+			y = e.clientY;
+		}
+
+		hoveredCellX = Math.floor(x / $cellSize);
+		hoveredCellY = Math.floor(y / $cellSize);
+
+		if (hoveredCellX >= qr.size || hoveredCellY >= qr.size) {
+			hoveredCellX = null;
+			hoveredCellY = null;
+		}
+	}
+
+	function handlePointerLeave() {
+		hoveredCellX = null;
+		hoveredCellY = null;
+	}
 </script>
 
 <div>
 	<DataTable
 		lines={unmasked ? qr.unmaskedLines : qr.lines}
-		on:pointermove={(e) => {
-			hoveredCellX = Math.floor(e.offsetX / $cellSize);
-			hoveredCellY = Math.floor(e.offsetY / $cellSize);
-
-			if (hoveredCellX >= qr.size || hoveredCellY >= qr.size) {
-				hoveredCellX = null;
-				hoveredCellY = null;
-			}
-		}}
-		on:pointerleave={() => {
-			hoveredCellX = null;
-			hoveredCellY = null;
-		}}
+		on:pointermove={handlePointerMove}
+		on:touchmove={handlePointerMove}
+		on:pointerleave={handlePointerLeave}
+		on:touchend={handlePointerLeave}
 	>
 		<!-- Hovered cell -->
 		{#if hoveredCellX != null && hoveredCellY != null}

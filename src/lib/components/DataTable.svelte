@@ -17,7 +17,7 @@
 
 <svelte:window on:resize={updateCellSize} />
 
-<table class="data-table" on:pointermove on:pointerleave>
+<table class="data-table" on:pointermove on:pointerleave on:touchmove on:touchend>
 	<tbody>
 		{#each lines as line, lineIndex (lineIndex)}
 			<tr>
