@@ -51,7 +51,7 @@ export class Qr {
 		// Make sure all lines are the same length
 		for (let i in this.lines) {
 			if (this.lines[i].length < this.size) {
-				this.lines[i] += ' '.repeat(this.size - this.lines[i].length);
+				this.lines[i] += '0'.repeat(this.size - this.lines[i].length);
 			}
 		}
 	}
