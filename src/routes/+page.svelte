@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 
 	import { tick } from 'svelte';
+	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 
 	import { parseQr } from '$lib/qr';
@@ -14,6 +15,10 @@
 
 	let qrId = validateQrId(data.qr);
 	$: qr = parseQr(qrs[qrId]);
+
+	$: if (browser) {
+		window.qr = qr;
+	}
 </script>
 
 QR code: <select
