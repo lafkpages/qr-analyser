@@ -72,4 +72,13 @@ QR code: <select
 			qr_code_cal.png
 		</a>
 	</li>
+	<li>
+		<a
+			href="https://qrcode.meetheed.com/images/qr_eg_wifi.png"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			qr_eg_wifi.png
+		</a>
+	</li>
 </ul>
