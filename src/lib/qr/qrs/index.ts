@@ -1,7 +1,8 @@
+import calendar from './calendar.qr?raw';
 import wikipedia from './wikipedia.qr?raw';
 import wifi from './wifi.qr?raw';
 
-const qrs = { wikipedia, wifi };
+const qrs = { calendar, wikipedia, wifi };
 
 export default qrs;
 

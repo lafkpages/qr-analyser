@@ -30,6 +30,7 @@ QR code: <select
 		goto(`/?qr=${qrId}`);
 	}}
 >
+	<option value="calendar">Calendar event</option>
 	<option value="wikipedia">Wikipedia</option>
 	<option value="wifi">WiFi</option>
 </select>
