@@ -63,4 +63,13 @@ QR code: <select
 			QR code - Wikipedia
 		</a>
 	</li>
+	<li>
+		<a
+			href="https://qrcode.meetheed.com/images/qr_code_cal.png"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			qr_code_cal.png
+		</a>
+	</li>
 </ul>
