@@ -39,6 +39,7 @@
 		position: relative;
 		width: max-content;
 		height: max-content;
+		background-color: white;
 
 		tbody {
 			pointer-events: none;
