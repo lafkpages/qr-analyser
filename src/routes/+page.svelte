@@ -35,6 +35,10 @@ QR code: <select
 	<option value="wifi">WiFi</option>
 </select>
 
+<br />
+
+Or <a href="/upload">upload an image</a>.
+
 <hr />
 
 <Qr {qr} />
