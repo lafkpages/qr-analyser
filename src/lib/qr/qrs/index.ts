@@ -6,7 +6,7 @@ const qrs = { calendar, wikipedia, wifi };
 
 export default qrs;
 
-export const qrIds = Object.keys(qrs) as (keyof typeof qrs)[];
+export const qrIds = [...Object.keys(qrs), 'custom'] as (keyof typeof qrs | 'custom')[];
 export type QrId = (typeof qrIds)[number];
 
 export function validateQrId(qrId: string) {

@@ -14,7 +14,7 @@
 	export let data: PageData;
 
 	let qrId = validateQrId(data.qr);
-	$: qr = parseQr(qrs[qrId]);
+	$: qr = parseQr(qrId == 'custom' ? data.qrData : qrs[qrId]);
 
 	$: if (browser) {
 		window.qr = qr;
@@ -33,6 +33,9 @@ QR code: <select
 	<option value="calendar">Calendar event</option>
 	<option value="wikipedia">Wikipedia</option>
 	<option value="wifi">WiFi</option>
+	{#if qrId == 'custom'}
+		<option value="custom" disabled selected>Custom</option>
+	{/if}
 </select>
 
 <br />

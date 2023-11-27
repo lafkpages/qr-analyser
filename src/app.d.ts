@@ -1,5 +1,7 @@
 import type { Qr } from '$lib/qr';
 
+import type { QRCode } from 'jsqr';
+
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
@@ -11,7 +13,7 @@ declare global {
 	}
 
 	interface Window {
-		qr?: Qr;
+		qr?: Qr | QRCode | null;
 	}
 }
 

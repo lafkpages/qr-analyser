@@ -1,16 +1,14 @@
 <script lang="ts">
+	import type { Vector, Point } from '$lib/math';
+
 	import { onMount } from 'svelte';
+
+	import { scaleVector, addVectors, xyObjectToPoint } from '$lib/math';
 
 	import DataTable from '$components/DataTable.svelte';
 
-	import {
-		degreesBetweenTwoLines,
-		distance,
-		getPointFromPointAngleAndDistance,
-		threeSixtyDegrees
-	} from '$lib/geometry';
-
 	import jsqr from 'jsqr';
+	import { intersect } from 'mathjs';
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;
@@ -19,6 +17,11 @@
 	let image: HTMLImageElement | null = null;
 
 	let qrLines: string[] = [];
+	$: qrFile = qrLines
+		.join('\n')
+		.replace(/([01])/g, '$1$1')
+		.replace(/00/g, '  ')
+		.replace(/11/g, '##');
 
 	onMount(() => {
 		ctx = canvas.getContext('2d');
@@ -27,6 +30,7 @@
 			return;
 		}
 
+		ctx.imageSmoothingEnabled = false;
 		ctx.save();
 
 		image = new Image();
@@ -53,45 +57,11 @@
 
 			// read QR code
 			const qr = jsqr(data.data, data.width, data.height);
-
-			console.debug(qr);
+			window.qr = qr;
 
 			if (!qr) {
 				return;
 			}
-
-			/**
-			 * The width of the QR code's sides
-			 */
-			const qrSides = {
-				top: distance(qr.location.topLeftCorner, qr.location.topRightCorner),
-				right: distance(qr.location.topRightCorner, qr.location.bottomRightCorner),
-				bottom: distance(qr.location.bottomRightCorner, qr.location.bottomLeftCorner),
-				left: distance(qr.location.bottomLeftCorner, qr.location.topLeftCorner)
-			};
-
-			const qrTopLeftAngle = degreesBetweenTwoLines(
-				[qr.location.topLeftCorner, qr.location.topRightCorner],
-				[qr.location.topLeftCorner, qr.location.bottomLeftCorner]
-			);
-			const qrTopRightAngle = degreesBetweenTwoLines(
-				[qr.location.topLeftCorner, qr.location.topRightCorner],
-				[qr.location.topRightCorner, qr.location.bottomRightCorner]
-			);
-			const qrTopAngle = degreesBetweenTwoLines(
-				[qr.location.topLeftCorner, qr.location.topRightCorner],
-				[
-					qr.location.topLeftCorner,
-					{ x: qr.location.topRightCorner.x, y: qr.location.topLeftCorner.y }
-				]
-			);
-			const qrBottomAngle = degreesBetweenTwoLines(
-				[qr.location.bottomLeftCorner, qr.location.bottomRightCorner],
-				[
-					qr.location.bottomLeftCorner,
-					{ x: qr.location.bottomRightCorner.x, y: qr.location.bottomLeftCorner.y }
-				]
-			);
 
 			/**
 			 * The QR code size in QR modules.
@@ -99,15 +69,38 @@
 			const qrSize = 4 * qr.version + 17;
 
 			/**
-			 * The size of each QR code cell in pixels.
-			 * May be different for each side if the QR code is skewed.
+			 * Vectors for each side of the QR code, divided to be the size of one QR module.
+			 *
+			 * ```
+			 * • -------> •
+			 * |          |
+			 * |          |
+			 * |          |
+			 * \/         \/
+			 * • -------> •
+			 * ```
 			 */
-			const qrCellSizes = {
-				top: qrSides.top / qrSize,
-				right: qrSides.right / qrSize,
-				bottom: qrSides.bottom / qrSize,
-				left: qrSides.left / qrSize
+			const qrSidesVectors = {
+				top: <Vector>[
+					qr.location.topRightCorner.x - qr.location.topLeftCorner.x,
+					qr.location.topRightCorner.y - qr.location.topLeftCorner.y
+				],
+				right: <Vector>[
+					qr.location.bottomRightCorner.x - qr.location.topRightCorner.x,
+					qr.location.bottomRightCorner.y - qr.location.topRightCorner.y
+				],
+				bottom: <Vector>[
+					qr.location.bottomRightCorner.x - qr.location.bottomLeftCorner.x,
+					qr.location.bottomRightCorner.y - qr.location.bottomLeftCorner.y
+				],
+				left: <Vector>[
+					qr.location.bottomRightCorner.x - qr.location.topRightCorner.x,
+					qr.location.bottomRightCorner.y - qr.location.topRightCorner.y
+				]
 			};
+			console.log({ qrSidesVectors });
+
+			qrLines.length = 0;
 
 			// Draw QR code bounds
 			ctx.strokeStyle = 'red';
@@ -121,52 +114,49 @@
 			ctx.lineTo(qr.location.topLeftCorner.x, qr.location.topLeftCorner.y);
 			ctx.stroke();
 
-			// Draw QR code lines
-			ctx.strokeStyle = 'blue';
+			// Draw/get QR code lines
+			ctx.strokeStyle = '';
 			ctx.setLineDash([]);
-			for (let i = 0; i < qrSize; i++) {
-				// Horizontal lines
-				{
-					const from = getPointFromPointAngleAndDistance(
-						qr.location.topLeftCorner,
-						qrTopLeftAngle - qrTopAngle,
-						i * qrCellSizes.left
+			ctx.fillStyle = 'magenta';
+			for (let y = 0; y < qrSize; y++) {
+				let line = '';
+
+				const pointLeft = addVectors(
+					scaleVector(qrSidesVectors.left, (y + 0.5) / qrSize),
+					xyObjectToPoint(qr.location.topLeftCorner)
+				);
+				const pointRight = addVectors(
+					scaleVector(qrSidesVectors.right, (y + 0.5) / qrSize),
+					xyObjectToPoint(qr.location.topRightCorner)
+				);
+
+				for (let x = 0; x < qrSize; x++) {
+					const pointTop = addVectors(
+						scaleVector(qrSidesVectors.top, (x + 0.5) / qrSize),
+						xyObjectToPoint(qr.location.topLeftCorner)
+					);
+					const pointBottom = addVectors(
+						scaleVector(qrSidesVectors.bottom, (x + 0.5) / qrSize),
+						xyObjectToPoint(qr.location.bottomLeftCorner)
 					);
 
-					const to = getPointFromPointAngleAndDistance(
-						qr.location.topRightCorner,
-						qrTopRightAngle - qrTopAngle,
-						i * qrCellSizes.right
-					);
+					const intersection = intersect(pointLeft, pointRight, pointTop, pointBottom) as Point;
 
-					ctx.beginPath();
-					ctx.moveTo(from.x, from.y);
-					ctx.lineTo(to.x, to.y);
-					ctx.stroke();
+					const cellIsFilled =
+						data.data[
+							Math.floor(intersection[1]) * data.width * 4 + Math.floor(intersection[0]) * 4
+						] < 128;
+					line += cellIsFilled ? '1' : '0';
+
+					ctx.fillStyle = cellIsFilled ? 'magenta' : 'cyan';
+					ctx.fillRect(intersection[0], intersection[1], 1, 1);
 				}
 
-				// Vertical lines
-				{
-					const from = getPointFromPointAngleAndDistance(
-						qr.location.topLeftCorner,
-						threeSixtyDegrees - qrTopAngle,
-						i * qrCellSizes.top
-					);
-
-					const to = getPointFromPointAngleAndDistance(
-						qr.location.bottomLeftCorner,
-						threeSixtyDegrees - qrBottomAngle,
-						i * qrCellSizes.bottom
-					);
-
-					ctx.beginPath();
-					ctx.moveTo(from.x, from.y);
-					ctx.lineTo(to.x, to.y);
-					ctx.stroke();
-				}
+				qrLines.push(line);
 			}
 
 			image = image;
+			qrLines = qrLines;
 		};
 	});
 </script>
@@ -198,6 +188,10 @@
 <br />
 
 <DataTable lines={qrLines} />
+
+{#if qrFile}
+	<a href="/?qr=custom&qrData={encodeURIComponent(qrFile)}">Analyse QR</a>
+{/if}
 
 <style lang="scss">
 	canvas {
