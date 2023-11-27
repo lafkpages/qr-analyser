@@ -6,7 +6,8 @@
 	import {
 		degreesBetweenTwoLines,
 		distance,
-		getPointFromPointAngleAndDistance
+		getPointFromPointAngleAndDistance,
+		threeSixtyDegrees
 	} from '$lib/geometry';
 
 	import jsqr from 'jsqr';
@@ -84,7 +85,13 @@
 					{ x: qr.location.topRightCorner.x, y: qr.location.topLeftCorner.y }
 				]
 			);
-			console.debug(qrTopLeftAngle, qrTopRightAngle);
+			const qrBottomAngle = degreesBetweenTwoLines(
+				[qr.location.bottomLeftCorner, qr.location.bottomRightCorner],
+				[
+					qr.location.bottomLeftCorner,
+					{ x: qr.location.bottomRightCorner.x, y: qr.location.bottomLeftCorner.y }
+				]
+			);
 
 			/**
 			 * The QR code size in QR modules.
@@ -116,23 +123,47 @@
 
 			// Draw QR code lines
 			ctx.strokeStyle = 'blue';
-			for (let y = 0; y < qrSize; y++) {
-				const from = getPointFromPointAngleAndDistance(
-					qr.location.topLeftCorner,
-					qrTopLeftAngle - qrTopAngle,
-					y * qrCellSizes.left
-				);
+			ctx.setLineDash([]);
+			for (let i = 0; i < qrSize; i++) {
+				// Horizontal lines
+				{
+					const from = getPointFromPointAngleAndDistance(
+						qr.location.topLeftCorner,
+						qrTopLeftAngle - qrTopAngle,
+						i * qrCellSizes.left
+					);
 
-				const to = getPointFromPointAngleAndDistance(
-					qr.location.topRightCorner,
-					qrTopRightAngle - qrTopAngle,
-					y * qrCellSizes.right
-				);
+					const to = getPointFromPointAngleAndDistance(
+						qr.location.topRightCorner,
+						qrTopRightAngle - qrTopAngle,
+						i * qrCellSizes.right
+					);
 
-				ctx.beginPath();
-				ctx.moveTo(from.x, from.y);
-				ctx.lineTo(to.x, to.y);
-				ctx.stroke();
+					ctx.beginPath();
+					ctx.moveTo(from.x, from.y);
+					ctx.lineTo(to.x, to.y);
+					ctx.stroke();
+				}
+
+				// Vertical lines
+				{
+					const from = getPointFromPointAngleAndDistance(
+						qr.location.topLeftCorner,
+						threeSixtyDegrees - qrTopAngle,
+						i * qrCellSizes.top
+					);
+
+					const to = getPointFromPointAngleAndDistance(
+						qr.location.bottomLeftCorner,
+						threeSixtyDegrees - qrBottomAngle,
+						i * qrCellSizes.bottom
+					);
+
+					ctx.beginPath();
+					ctx.moveTo(from.x, from.y);
+					ctx.lineTo(to.x, to.y);
+					ctx.stroke();
+				}
 			}
 
 			image = image;
