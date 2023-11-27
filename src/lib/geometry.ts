@@ -23,3 +23,5 @@ export function getPointFromPointAngleAndDistance(
 
 	return { x, y };
 }
+
+export const threeSixtyDegrees = Math.PI * 2;
