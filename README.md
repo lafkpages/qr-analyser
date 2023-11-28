@@ -1,1 +1,1 @@
-# Interactive QR reader
+# QR analyser
