@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Vector, Point } from '$lib/math';
+	import type { QRCode } from 'jsqr';
 
 	import { onMount } from 'svelte';
 
@@ -15,6 +16,23 @@
 
 	// load and draw image
 	let image: HTMLImageElement | null = null;
+
+	let qr: QRCode | null = null;
+	$: qrCorners = qr
+		? {
+				topLeft: qr.location.topLeftCorner,
+				topRight: qr.location.topRightCorner,
+				bottomLeft: qr.location.bottomLeftCorner,
+				bottomRight: qr.location.bottomRightCorner
+		  }
+		: null;
+	let qrCornerDragging: null | keyof NonNullable<typeof qrCorners> = null;
+
+	// Redraw when corners change
+	$: {
+		qrCorners;
+		draw(false);
+	}
 
 	let qrLines: string[] = [];
 	$: qrFile = qrLines
@@ -34,40 +52,78 @@
 		ctx.save();
 
 		image = new Image();
-		image.onload = async () => {
-			if (!ctx || !image) {
-				return;
-			}
+		image.onload = () => {
+			draw(true);
+		};
+	});
 
-			// restore canvas state
-			ctx.restore();
+	function draw(end: boolean) {
+		if (!ctx || !image) {
+			return;
+		}
 
-			// resize canvas to fit image
-			canvas.width = image.width;
-			canvas.height = image.height;
+		// restore canvas state
+		ctx.restore();
 
-			// draw image
-			ctx.drawImage(image, 0, 0);
+		// resize canvas to fit image
+		canvas.width = image.width;
+		canvas.height = image.height;
 
-			// revoke image URL to free memory
-			URL.revokeObjectURL(image.src);
+		// draw image
+		ctx.drawImage(image, 0, 0);
 
-			// get image data
-			const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		// revoke image URL to free memory
+		URL.revokeObjectURL(image.src);
 
-			// read QR code
-			const qr = jsqr(data.data, data.width, data.height);
+		// get image data
+		const data = end ? ctx.getImageData(0, 0, canvas.width, canvas.height) : null;
+
+		qrLines.length = 0;
+
+		// read QR code
+		if (end && data) {
+			qr = jsqr(data.data, data.width, data.height);
 			window.qr = qr;
+		}
 
-			if (!qr) {
-				return;
-			}
+		// get QR code corners
+		if (!qrCorners) {
+			qrCorners = qr
+				? {
+						topLeft: qr.location.topLeftCorner,
+						topRight: qr.location.topRightCorner,
+						bottomLeft: qr.location.bottomLeftCorner,
+						bottomRight: qr.location.bottomRightCorner
+				  }
+				: {
+						topLeft: { x: 100, y: 100 },
+						topRight: { x: 200, y: 100 },
+						bottomLeft: { x: 100, y: 200 },
+						bottomRight: { x: 200, y: 200 }
+				  };
+		}
 
-			/**
-			 * The QR code size in QR modules.
-			 */
-			const qrSize = 4 * qr.version + 17;
+		// Draw QR code corners
+		ctx.fillStyle = 'red';
+		ctx.strokeStyle = '';
+		for (const corner of Object.values(qrCorners)) {
+			ctx.fillRect(corner.x - 5, corner.y - 5, 10, 10);
+		}
 
+		// Draw QR code bounds
+		ctx.strokeStyle = 'red';
+		ctx.lineWidth = 1;
+		ctx.setLineDash([5, 5]);
+		ctx.beginPath();
+		ctx.moveTo(qrCorners.topLeft.x, qrCorners.topLeft.y);
+		ctx.lineTo(qrCorners.topRight.x, qrCorners.topRight.y);
+		ctx.lineTo(qrCorners.bottomRight.x, qrCorners.bottomRight.y);
+		ctx.lineTo(qrCorners.bottomLeft.x, qrCorners.bottomLeft.y);
+		ctx.lineTo(qrCorners.topLeft.x, qrCorners.topLeft.y);
+		ctx.stroke();
+
+		// Draw/get QR code lines
+		if (end && data && qr) {
 			/**
 			 * Vectors for each side of the QR code, divided to be the size of one QR module.
 			 *
@@ -82,39 +138,28 @@
 			 */
 			const qrSidesVectors = {
 				top: <Vector>[
-					qr.location.topRightCorner.x - qr.location.topLeftCorner.x,
-					qr.location.topRightCorner.y - qr.location.topLeftCorner.y
+					qrCorners.topRight.x - qrCorners.topLeft.x,
+					qrCorners.topRight.y - qrCorners.topLeft.y
 				],
 				right: <Vector>[
-					qr.location.bottomRightCorner.x - qr.location.topRightCorner.x,
-					qr.location.bottomRightCorner.y - qr.location.topRightCorner.y
+					qrCorners.bottomRight.x - qrCorners.topRight.x,
+					qrCorners.bottomRight.y - qrCorners.topRight.y
 				],
 				bottom: <Vector>[
-					qr.location.bottomRightCorner.x - qr.location.bottomLeftCorner.x,
-					qr.location.bottomRightCorner.y - qr.location.bottomLeftCorner.y
+					qrCorners.bottomRight.x - qrCorners.bottomLeft.x,
+					qrCorners.bottomRight.y - qrCorners.bottomLeft.y
 				],
 				left: <Vector>[
-					qr.location.bottomRightCorner.x - qr.location.topRightCorner.x,
-					qr.location.bottomRightCorner.y - qr.location.topRightCorner.y
+					qrCorners.bottomRight.x - qrCorners.topRight.x,
+					qrCorners.bottomRight.y - qrCorners.topRight.y
 				]
 			};
-			console.log({ qrSidesVectors });
 
-			qrLines.length = 0;
+			/**
+			 * The QR code size in QR modules.
+			 */
+			const qrSize = 4 * qr.version + 17;
 
-			// Draw QR code bounds
-			ctx.strokeStyle = 'red';
-			ctx.lineWidth = 1;
-			ctx.setLineDash([5, 5]);
-			ctx.beginPath();
-			ctx.moveTo(qr.location.topLeftCorner.x, qr.location.topLeftCorner.y);
-			ctx.lineTo(qr.location.topRightCorner.x, qr.location.topRightCorner.y);
-			ctx.lineTo(qr.location.bottomRightCorner.x, qr.location.bottomRightCorner.y);
-			ctx.lineTo(qr.location.bottomLeftCorner.x, qr.location.bottomLeftCorner.y);
-			ctx.lineTo(qr.location.topLeftCorner.x, qr.location.topLeftCorner.y);
-			ctx.stroke();
-
-			// Draw/get QR code lines
 			ctx.strokeStyle = '';
 			ctx.setLineDash([]);
 			ctx.fillStyle = 'magenta';
@@ -123,21 +168,21 @@
 
 				const pointLeft = addVectors(
 					scaleVector(qrSidesVectors.left, (y + 0.5) / qrSize),
-					xyObjectToPoint(qr.location.topLeftCorner)
+					xyObjectToPoint(qrCorners.topLeft)
 				);
 				const pointRight = addVectors(
 					scaleVector(qrSidesVectors.right, (y + 0.5) / qrSize),
-					xyObjectToPoint(qr.location.topRightCorner)
+					xyObjectToPoint(qrCorners.topRight)
 				);
 
 				for (let x = 0; x < qrSize; x++) {
 					const pointTop = addVectors(
 						scaleVector(qrSidesVectors.top, (x + 0.5) / qrSize),
-						xyObjectToPoint(qr.location.topLeftCorner)
+						xyObjectToPoint(qrCorners.topLeft)
 					);
 					const pointBottom = addVectors(
 						scaleVector(qrSidesVectors.bottom, (x + 0.5) / qrSize),
-						xyObjectToPoint(qr.location.bottomLeftCorner)
+						xyObjectToPoint(qrCorners.bottomLeft)
 					);
 
 					const intersection = intersect(pointLeft, pointRight, pointTop, pointBottom) as Point;
@@ -154,11 +199,61 @@
 
 				qrLines.push(line);
 			}
+		}
 
-			image = image;
-			qrLines = qrLines;
-		};
-	});
+		image = image;
+		qrLines = qrLines;
+	}
+
+	function getHoveredCorner(e: PointerEvent) {
+		if (!qrCorners) {
+			return null;
+		}
+
+		let hoveredCorner: null | keyof typeof qrCorners = null;
+		for (const [corner, cornerPosition] of Object.entries(qrCorners)) {
+			if (
+				Math.abs(cornerPosition.x - e.offsetX) < 10 &&
+				Math.abs(cornerPosition.y - e.offsetY) < 10
+			) {
+				hoveredCorner = corner as keyof typeof qrCorners;
+				break;
+			}
+		}
+
+		return hoveredCorner;
+	}
+
+	function onPointerDown(e: PointerEvent) {
+		const hoveredCorner = getHoveredCorner(e);
+
+		if (!hoveredCorner) {
+			return;
+		}
+
+		qrCornerDragging = hoveredCorner;
+
+		console.log('Dragging corner', hoveredCorner);
+	}
+
+	function onPointerMove(e: PointerEvent) {
+		if (!qrCornerDragging || !qrCorners) {
+			return;
+		}
+
+		console.log('Dragging corner', qrCornerDragging, e.offsetX, e.offsetY);
+
+		qrCorners[qrCornerDragging].x = e.offsetX;
+		qrCorners[qrCornerDragging].y = e.offsetY;
+
+		draw(false);
+	}
+
+	function onPointerUp(e: PointerEvent) {
+		qrCornerDragging = null;
+
+		draw(true);
+	}
 </script>
 
 <p>Upload an image containing a QR code.</p>
@@ -183,11 +278,20 @@
 
 <hr />
 
-<canvas bind:this={canvas} />
+<canvas
+	bind:this={canvas}
+	on:pointerdown={onPointerDown}
+	on:pointermove={onPointerMove}
+	on:pointerup={onPointerUp}
+/>
 
-<br />
-
-<DataTable lines={qrLines} />
+<p>
+	{#if qrLines.length}
+		<DataTable lines={qrLines} />
+	{:else}
+		No QR code detected.
+	{/if}
+</p>
 
 {#if qrFile}
 	<a href="/?qr=custom&qrData={encodeURIComponent(qrFile)}">Analyse QR</a>
@@ -199,5 +303,7 @@
 
 		max-width: 100%;
 		max-height: 80svh;
+
+		display: block;
 	}
 </style>
